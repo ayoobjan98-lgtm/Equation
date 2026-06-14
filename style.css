@@ -1,0 +1,476 @@
+* {
+  box-sizing: border-box;
+  font-size: 14px;
+}
+
+body {
+  background: linear-gradient(145deg, rgba(0.4, 78.6, 89.2, .9));
+  margin: 0;
+  padding-bottom: 70px;
+}
+
+nav {
+  background: linear-gradient(135deg, rgba(10, 0.100, 10.444, 2.3), rgba(50, 0.10, 35, 0.2),rgba(25, 25, 0, 0.3)) ;
+
+  position: fixed; 
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: 0 16px 16px;
+  box-shadow: 0 0 15px rgba(25, 25, 0, 0.3);
+  text-align: center;
+  display: flex; 
+  justify-content: space-around;
+  align-items: center;
+  padding: 10px 16px;
+  border-radius: 12px;
+  z-index: 1;
+}
+
+nav ul {
+  list-style:none;
+  padding: 0;
+  margin: 0;
+  display:  flex; 
+  justify-content: space-around;
+  width: 100%;
+}
+
+nav ul li {
+  padding: 10px;
+  text-align: center;
+}
+
+nav ul li a {
+  color: red;
+  text-decoration: none;
+}
+
+
+.h3 {
+  text-shadow: 0 0 15px rgba(l9.8, 67.7, 56, 0.5);
+  text-align: center;
+  justify-content: center;
+  font-size: bold;
+  font: 1em caption, sans-serif;
+  position: fixed;
+  border: 1px solid yellow;
+  right: 40%;
+  top: 20px;
+  z-index: 3;
+  opacity: 0.2;
+  color: white;
+  
+  animation: bg 0.7s ease infinite;
+}
+.h31 {
+  text-shadow: 0 0 15px rgba(l9.8, 67.7, 56, 0.5);
+  text-align: center;
+  justify-content: center;
+  font-size: bold;
+  font: 1em caption, sans-serif;
+  position: fixed;
+  border: 1px solid yellow;
+  right: 40%;
+  top: 60px;
+  z-index:
+    3;
+  opacity: 0.2;
+  color: white;
+  
+  animation: bg 0.9s  infinite;
+}
+
+
+.h {
+  background: black;
+  width: 100%;
+  height: 100px;
+  
+  align-items: center;
+  justify-items: center;
+  white-space: nowrap;
+  overflow: auto;
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index:  1;
+}
+
+.mk {
+  position: absolute;
+  top: 100px;
+  right: 25px;
+  font-family: Georgia, 'Times New Roman', Times, serif; 
+  font-size: 30px;
+  border: 3px dashed black;
+  
+  animation: move 0.9s infinite;
+}
+
+.rect 
+  {
+  background: rgba(0, 0, 125, 0.5);
+  backdrop-filter: blur(14px);
+  width: 250px;
+  height: 120px;
+  margin: 120px 5px 100px 100px;
+  border-radius: 12px;
+  
+  align-items: center;
+  justify-items: center;
+  position: relative;
+}
+  
+.rect .title {
+  direction: rtl;
+  position: absolute;
+  justify-content: space-around;
+  content:'';
+  text-transform: capitalize;
+  right: 0;
+  margin-right: 5px;
+  margin-top: 5px;
+  background: red;
+  width: auto;
+  height: 30px;
+  border-radius: 5px;
+  z-index: 1;
+}   
+
+.rect .discription {
+  position: absolute; 
+  right: 0;
+  bottom: 50px;
+  margin-right: 0;
+  text-align: center;
+  justify-content: rtl;
+  background: lightblue;
+  width: 210px;
+  height: 35px;
+  border-radius:10px ;
+  overflow: auto;
+  white-space: nowrap;
+  z-index: 1;
+}
+
+.like {
+  text-decoration: none;
+  text-align: center;
+  background: green; 
+  margin-bottom: 10px;
+  width: 50px; 
+  height: 25px;
+  border-radius: 10px;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
+
+.btn {
+  text-decoration: none;
+  text-align: center;
+  background: blue;
+  margin-bottom: 10px;
+  width: 50px;
+  height: 25px;
+  border-radius: 10px;
+  border: 1px solid grey;
+  position: absolute;
+  bottom: 0;
+  right: 80px;
+}
+
+.liked {
+  background: red;
+  border-radius: 12px;
+  border: 3px solid black;
+  overflow: hidden;
+}
+/*.rect .like:hover {
+  background-color: red;
+  z-index:1;
+  color: green;
+}
+
+.rect .like:active {
+  background-color: green;
+  z-index: 1;
+  color: red;
+}*/
+.t {
+  align-items: center;
+  justify-content: center;
+  background: green;
+
+  font-size: 100px;
+}
+
+.main {
+  justify-content: center;
+  justify-items: center;
+  align-items: center;
+  text-align: center;
+  background: lightcoral;
+  backdrop-filter: blur(4px);
+  width: 380px;
+  height: 550px; 
+  border-radius: 12px;
+  overflow: auto;
+  white-space: nowrap;
+  
+  position:  fixed; 
+  right: 4%;
+  
+  padding: 30px;
+  margin-top: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+
+.main label {
+  display: block;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.main select {
+  padding: 8px;
+  font-size: 16px;
+  margin-bottom: 20px;
+}
+
+.main a {
+  display: inline-block;
+  padding: 10px 20px;
+  background: #007bff;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  width: 150px;
+  height: 50px;
+  position: absolute;
+  bottom: 110px;
+  right: 40%;
+}
+
+.main .slover{
+  background: gray;
+  width: 100%;
+  height: 50%;
+  border-radius: 5px;
+  border: 2px dashed black;
+  box-shadow: 0 0 30px rgba(25, 0, 0, 0.9);
+  white-space: nowrap;
+  overflow: auto;
+} 
+
+
+.equation-row {
+    margin-bottom: 12px;
+    font-size: 18px;
+}
+
+input {
+    width: 60px;
+    padding: 5px;
+    margin: 3px;
+}
+
+.solve-btn {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 10px 20px;
+    background: #4CAF50;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+}
+
+.solve-btn:hover {
+    background: #388E3C;
+}
+
+.result-box {
+    margin-top: 20px;
+    padding: 15px;
+    background: #f4f4f4;
+    border-radius: 10px;
+    white-space: nowrap;
+    overflow: auto;
+}
+ 
+
+.num {
+  text-align: center;
+  background: skyblue;
+  position: absolute;
+  left: 0;
+  top:  -10px; 
+  
+  white-space: nowrap;
+  overflow: auto;
+  width: 35px;
+  height: 20px;
+  border-radius: 12px;
+  z-index: 8;
+}
+
+.num1 {
+  margin-top: 0;
+  margin: 0 0 0 0; 
+  position: absolute;
+  left: 0;
+  z-index: 8;
+}
+
+ 
+.slover {
+  overflow: auto;
+  white-space: nowrap; 
+} 
+
+/* استایل مودال سفارشی */
+.custom-modal-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: none; /* در ابتدا مخفی است */
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.custom-modal {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    max-width: 300px;
+    width: 90%;
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+}
+
+.btn-confirm { background: #e74c3c; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; }
+.btn-cancel { background: #95a5a6; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; }
+
+
+@keyframes bg{
+  0%{
+    transition: all 2s;
+    border: 1px solid green;
+    border-right-width: 10px;
+    border-left-width: 0;
+    color: yellow;
+    opacity: 1;
+  }  
+  100% {
+    transition: all 2s;
+    border: 1px solid green;
+    border-left-width: 10px;
+    border-right-width: 0;
+    color: yellow;
+    opacity: 1;
+  }
+  
+  10% {transition: all 2s;
+    border: 1px solid blue; 
+    border-left-width: 10px;
+    border-right-width: 0;
+    color: red;
+    opacity: 0.4;}
+  40% {transition: all 2s;
+    border: 1px solid salmon;
+border-right-width: 10px;
+color: brown;
+opacity:0.6;}
+  50% {transition: all 2s;
+    border: 1px solid aqua;
+border-right-width: 10px;
+border-left-width: 0;
+color: lightblue;
+opacity: 0.8;}
+  70% {transition: all 2s;
+    border: 1px solid yellowgreen;
+border-left-width: 10px;
+border-right-width: 0;
+color: blueviolet;
+opacity: 0.09;}
+  90% {
+    transition: all 2s;
+    border: 1px solid khaki;
+border-right-width: 10px;
+border-left-width:0;
+color: orchid;
+opacity: 0.10;}
+}
+
+
+@keyframes move{
+  0%,  100% {
+    transition: all 2s;
+    background: red;
+    border-color: red;
+  }
+  
+  10% {
+    transition: all 2s;
+    background: green;
+    border-color: red;
+  }
+
+  20% {
+  transition: all 2s;
+  background: yellow;
+  border-color: black;
+}
+
+  30% {
+  transition: all 2s;
+  background: yellowgreen;
+  border-color: red;
+}
+
+  40% {
+  transition: all 2s;
+  background: black;
+  border-color: blue;
+}
+  
+  50% {
+  transition: all 2s;
+  background: honeydew;
+  border-color: red;
+}
+  
+  60% {
+  transition: all 2s;
+  background: black;
+  border-color: white;
+}
+
+ 70% {
+  transition: all 2s;
+  background: red;
+  border-color: blue;
+}
+
+ 80% {
+  transition: all 2s;
+  background: blueviolet;
+  border-color: khaki;
+}
+
+  90% {
+  transition: all 2s;
+  background: orchid;
+  border-color: orange;
+}
+  }
