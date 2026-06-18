@@ -82,13 +82,4 @@ document.addEventListener("DOMContentLoaded", function() {
   
   // ---- اجرا ----
   renderFavorites();
-});  
-  const index = delBtn.dataset.index;
-  const rect = delBtn.closest(".rect");
-  
-  data[index].like = false; 
-  localStorage.setItem(key, JSON.stringify(data));
-  rect.remove();
-}
-
-}) 
+});
