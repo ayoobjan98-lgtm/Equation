@@ -2,69 +2,67 @@
 <html lang="fa" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>صفحه رهنما</title>
-  <!-- استفاده از CDN برای تست سریع (اگر فایل محلی دارید، لینک خود را بگذارید) -->
-  <link href="bootstrap.min.css" rel="stylesheet">
-  <style>
-    body { font-family: Tahoma, sans-serif; } /* برای نمایش بهتر فارسی */
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>راهنما</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://cdn.fontcdn.ir/font/vazir/Vazir.css" rel="stylesheet">
 </head>
+<body>
 
-<body class="bg-light"> <!-- تغییر پس‌زمینه به روشن برای خوانایی بهتر -->
+  <header class="app-header">
+    <h1>📖 راهنمای برنامه</h1>
+    <p>چطور از حل‌کننده استفاده کنم؟</p>
+  </header>
 
-  <div class="container py-5">
-    
-    <!-- بخش منو -->
-    <div class="card shadow-sm mb-4">
-      <div class="card-header bg-primary text-white">
-        <h1 class="h4 mb-0">🍴 منو</h1>
-      </div>
-      <div class="card-body">
-        <a href="index.html" class="text-primary border-bottom pb-2">🏠 خانه</a>
-        <h5><a href="add.html" class="text-secondary">➕ اضافه کردن</a></h5>
-        <h5><a  href="favert.html" class="text-secondary">علاقه مند ها ❤</a></h5>
-        <h5><a href="gaid.html" class="text-secondary"> رهنما</a></h5> 
-      </div>
+  <main class="main-content">
+    <div class="guide-card">
+      <h2>🏠 صفحه خانه</h2>
+      <ul>
+        <li>نمایش تمام معادلات ذخیره‌شده</li>
+        <li>با دکمه <span class="badge-like">❤️</span> می‌تونی معادله رو به علاقه‌مندی‌ها اضافه یا حذف کنی</li>
+        <li>با دکمه <span class="badge-delete">🗑️</span> یک معادله رو حذف کن</li>
+        <li>دکمه <span class="badge-danger">حذف همه</span> در بالای صفحه همه رو پاک می‌کنه</li>
+      </ul>
     </div>
 
-    <!-- بخش صفحه خانه -->
-    <div class="card mb-4 border-start border-primary border-5">
-      <div class="card-body">
-        <h1 class="h3 text-dark">🏠 صفحه خانه</h1>
-        <ol class="list-group list-group-numbered">
-          <li class="list-group-item">نمایش معادلات ثبت شده</li>
-          <li class="list-group-item">لایک و نلایک یک معادله</li>
-          <li class="list-group-item">حذف یک معادله با استفاده از دکمه <span class="badge bg-primary">آبی</span> کنار لبک</li>
-          <li class="list-group-item">حذف همه معادلات با استفاده از دکمه: <span class="text-danger fw-bold">حذف همه</span></li>
-        </ol>
-      </div>
+    <div class="guide-card">
+      <h2>➕ صفحه جدید</h2>
+      <ul>
+        <li>تعداد مجهولات رو از ۱ تا ۴ انتخاب کن</li>
+        <li>ضرایب و مقدار سمت راست معادله رو پر کن</li>
+        <li>روی دکمه <span class="badge-primary">🚀 حل</span> بزن</li>
+        <li>جواب یکتا، بی‌نهایت یا ناسازگار به همراه <strong>مراحل حل</strong> نمایش داده می‌شه</li>
+        <li>معادله به‌طور خودکار در صفحه خانه ذخیره می‌شه</li>
+      </ul>
     </div>
 
-    <!-- بخش صفحه اضافه کردن -->
-    <div class="card mb-4 border-start border-success border-5">
-      <div class="card-body">
-        <h1 class="h3 text-dark">➕ صفحه اضافه کردن</h1>
-        <ol class="list-group list-group-numbered">
-          <li class="list-group-item">حل معادلات یک تا چهار مجهول</li>
-          <li class="list-group-item">نمایش جواب معادله و ثبت آن در حافظه</li>
-        </ol>
-      </div>
+    <div class="guide-card">
+      <h2>❤️ صفحه علاقه‌مندی</h2>
+      <ul>
+        <li>فقط معادلاتی که لایک کردی اینجا نمایش داده می‌شن</li>
+        <li>با دکمه <span class="badge-danger">حذف از علاقه‌مندی</span> می‌تونی از لیست خارجش کنی</li>
+      </ul>
     </div>
+  </main>
 
-    <!-- بخش علاقه‌مندی‌ها -->
-    <div class="card mb-4 border-start border-warning border-5">
-      <div class="card-body">
-        <h1 class="h3 text-dark">❤️ صفحه علاقه‌مندی‌ها</h1>
-        <ol class="list-group list-group-numbered">
-          <li class="list-group-item">نمایش معادلات پسندیده شما</li>
-          <li class="list-group-item">حذف معادلات به صورت تکی با استفاده از دکمه <span class="badge bg-danger">قرمز</span> حذف</li>
-        </ol>
-      </div>
-    </div>
+  <nav class="bottom-nav">
+    <a href="index.html" class="nav-item">
+      <span class="nav-icon">🏠</span>
+      <span class="nav-label">خانه</span>
+    </a>
+    <a href="add.html" class="nav-item">
+      <span class="nav-icon">➕</span>
+      <span class="nav-label">جدید</span>
+    </a>
+    <a href="favert.html" class="nav-item">
+      <span class="nav-icon">❤️</span>
+      <span class="nav-label">علاقه‌مندی</span>
+    </a>
+    <a href="gaid.html" class="nav-item active">
+      <span class="nav-icon">📖</span>
+      <span class="nav-label">راهنما</span>
+    </a>
+  </nav>
 
-  </div> <!-- پایان container -->
-
-  
 </body>
-  </html>
+</html>
