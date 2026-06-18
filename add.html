@@ -1,38 +1,61 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="fa" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>دستگاه حل معادلات </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>حل معادله جدید</title>
   <link rel="stylesheet" href="style.css">
+  <link href="https://cdn.fontcdn.ir/font/vazir/Vazir.css" rel="stylesheet">
 </head>
-
 <body>
-  <nav dir="rtl">
-   <ul>
-  <li><a href="index.html">خانه</a></li>
-  <li><a href="add.html">اضافه کردن</a></li>
-  <li><a href="favert.html">علاقه مندی</a></li>
-  <li><a href="gaid.html">راهنما</a></li>
-</ul>
- </nav> 
 
-<main class="main">
-  <label for="change"> تعداد مجهولات معادله را انتخاب کنید: 
-  </label>
- <select name="change" id="change">
-   <option value="1">1</option>
-   <option value="2">2</option>
-   <option value="3">3</option>
-   <option value="4">4</option>
- </select>
- 
- <div id="solver" class="slover"></div>
- 
- <a href="#" id="solveBtn">حل</a>
- <script src="index.js"></script>
-</main> 
+  <header class="app-header">
+    <h1>➕ معادله جدید</h1>
+    <p>تعداد مجهولات را انتخاب کن</p>
+  </header>
+
+  <main class="main-content">
+    <div class="solver-card">
+      <div class="selector-row">
+        <label for="change">تعداد مجهولات:</label>
+        <select id="change" class="select-box">
+          <option value="1">۱ مجهول</option>
+          <option value="2" selected>۲ مجهول</option>
+          <option value="3">۳ مجهول</option>
+          <option value="4">۴ مجهول</option>
+        </select>
+      </div>
+
+      <div id="solverContainer" class="solver-container">
+        <!-- ورودی‌ها توسط js ساخته می‌شوند -->
+      </div>
+
+      <button id="solveBtn" class="btn btn-primary btn-block">🚀 حل معادله</button>
+      <div id="resultBox" class="result-box" style="display:none;"></div>
+      <div id="stepsBox" class="steps-box" style="display:none;"></div>
+    </div>
+  </main>
+
+  <!-- منوی پایین -->
+  <nav class="bottom-nav">
+    <a href="index.html" class="nav-item">
+      <span class="nav-icon">🏠</span>
+      <span class="nav-label">خانه</span>
+    </a>
+    <a href="add.html" class="nav-item active">
+      <span class="nav-icon">➕</span>
+      <span class="nav-label">جدید</span>
+    </a>
+    <a href="favert.html" class="nav-item">
+      <span class="nav-icon">❤️</span>
+      <span class="nav-label">علاقه‌مندی</span>
+    </a>
+    <a href="gaid.html" class="nav-item">
+      <span class="nav-icon">📖</span>
+      <span class="nav-label">راهنما</span>
+    </a>
+  </nav>
+
+  <script src="js.js"></script>
 </body>
-
 </html>
