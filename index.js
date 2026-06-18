@@ -1,31 +1,23 @@
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
   const select = document.getElementById("change");
-  const solverDiv = document.getElementById("solver");
+  const container = document.getElementById("solverContainer");
   const solveBtn = document.getElementById("solveBtn");
-  
-  if (!select || !solverDiv || !solveBtn) return;
-  
-  let n = parseInt(select.value) || 1;
-  const localStorageKey = "object";
-  let history = [];
-  let liked = false;
+  const resultBox = document.getElementById("resultBox");
+  const stepsBox = document.getElementById("stepsBox");
 
-  const stored = localStorage.getItem(localStorageKey);
-  if (stored) {
-    try { history = JSON.parse(stored); } catch (e) { history = []; }
-  }
+  let n = parseInt(select.value) || 2;
+  const STORAGE_KEY = "object";
 
-  // نام مجهول‌ها بر اساس n و ایندکس
-  function getVariableName(n, index) {
+  // ---- نام مجهولات ----
+  function getVarName(n, idx) {
     if (n === 1) return 'x';
-    if (n === 2) return (index === 0 ? 'x' : 'y');
-    if (n === 3) return ['x', 'y', 'z'][index];
-    if (n === 4) return ['x', 'y', 'z', 'w'][index]; // w کنار z
-    return `x${index+1}`;
+    if (n === 2) return (idx === 0 ? 'x' : 'y');
+    if (n === 3) return ['x', 'y', 'z'][idx];
+    if (n === 4) return ['x', 'y', 'z', 'w'][idx];
+    return `x${idx+1}`;
   }
 
-  // دریافت placeholder ضریب بر اساس n، شماره سطر و شماره ستون
-  // حروف ضرایب مطابق فرمت ارائه‌شده، اما بر اساس ترتیب جدید مجهول‌ها
+  // ---- placeholder ضرایب (سمت چپ) ----
   function getCoeffPlaceholder(n, row, col) {
     if (n === 1) return 'a';
     if (n === 2) {
@@ -44,233 +36,294 @@ document.addEventListener("DOMContentLoaded", function() {
       return coeffs[row][col];
     }
     if (n === 4) {
-      // ضرایب مطابق با ترتیب x,y,z,w
       const coeffs = [
-        ['a', 'b', 'c', 'd'], // معادله اول: a x + b y + c z + d w = e
-        ['f', 'g', 'h', 'i'], // معادله دوم: f x + g y + h z + i w = j
-        ['k', 'l', 'm', 'n'], // معادله سوم: k x + l y + m z + n w = o
-        ['p', 'q', 'r', 's']  // معادله چهارم: p x + q y + r z + s w = t
+        ['a', 'b', 'c', 'd'],
+        ['f', 'g', 'h', 'i'],
+        ['k', 'l', 'm', 'n'],
+        ['p', 'q', 'r', 's']
       ];
       return coeffs[row][col];
     }
     return `a${row+1}${col+1}`;
   }
 
-  // دریافت placeholder سمت راست معادله
+  // ---- placeholder جمله ثابت (فقط برای n=1) ----
+  function getConstPlaceholder(n) {
+    if (n === 1) return 'b';
+    return '';
+  }
+
+  // ---- placeholder سمت راست معادله ----
   function getRHSPlaceholder(n, row) {
     if (n === 1) return 'c';
     if (n === 2) return (row === 0 ? 'c' : 'f');
     if (n === 3) return (row === 0 ? 'd' : row === 1 ? 'h' : 'l');
     if (n === 4) return (row === 0 ? 'e' : row === 1 ? 'j' : row === 2 ? 'o' : 't');
-    return `c${row+1}`;
+    return `b${row+1}`;
   }
 
-  function areAllInputsFilled() {
-    if (n === 1) {
-      const inputs = document.querySelectorAll(".coef, .const, .res-const");
-      return Array.from(inputs).every(input => input.value.trim() !== "");
-    } else {
-      const inputs = document.querySelectorAll(".coef, .res-const");
-      return Array.from(inputs).every(input => input.value.trim() !== "");
-    }
-  }
-
-  function createInputs(size) {
-    solverDiv.innerHTML = "";
+  // ---- ساخت ورودی‌ها ----
+  function buildInputs(size) {
+    container.innerHTML = "";
     for (let i = 0; i < size; i++) {
-      const equationContainer = document.createElement("div");
-      equationContainer.className = "equation-container";
-      equationContainer.style.cssText = `
-        display: flex; 
-        align-items: center; 
-        justify-content: center; 
-        gap: 8px; 
-        margin: 0 auto 15px auto; 
-        padding: 12px 20px; 
-        border: 1px solid #e0e0e0; 
-        border-radius: 10px; 
-        background-color: #f9f9f9;
-        width: fit-content;
-        min-width: 300px;
-        direction: ltr;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-      `;
-      
-      // حلقه ضرایب و مجهولات
+      const row = document.createElement("div");
+      row.className = "equation-row";
+      row.dir = "ltr";
+
+      // ---- برای n=1: ax + b = c ----
+      if (size === 1) {
+        // ورودی ضریب a
+        const inputA = document.createElement("input");
+        inputA.type = "number";
+        inputA.className = "coef";
+        inputA.dataset.row = 0;
+        inputA.dataset.col = 0;
+        inputA.placeholder = "a";
+        inputA.step = "any";
+        row.appendChild(inputA);
+
+        const labelX = document.createElement("span");
+        labelX.className = "var-label";
+        labelX.textContent = "x";
+        row.appendChild(labelX);
+
+        const plus = document.createElement("span");
+        plus.className = "op";
+        plus.textContent = "+";
+        row.appendChild(plus);
+
+        // ورودی جمله ثابت b
+        const inputB = document.createElement("input");
+        inputB.type = "number";
+        inputB.className = "const";
+        inputB.dataset.row = 0;
+        inputB.placeholder = "b";
+        inputB.step = "any";
+        row.appendChild(inputB);
+
+        const eq = document.createElement("span");
+        eq.className = "eq-sign";
+        eq.textContent = "=";
+        row.appendChild(eq);
+
+        // ورودی سمت راست c
+        const inputC = document.createElement("input");
+        inputC.type = "number";
+        inputC.className = "rhs";
+        inputC.dataset.row = 0;
+        inputC.placeholder = "c";
+        inputC.step = "any";
+        row.appendChild(inputC);
+
+        container.appendChild(row);
+        continue;
+      }
+
+      // ---- برای n >= 2 به صورت استاندارد ----
       for (let j = 0; j < size; j++) {
-        const coefGroup = document.createElement("div");
-        coefGroup.style.cssText = "display: flex; align-items: center; gap: 4px;";
-        
-        const coef = document.createElement("input");
-        coef.type = "number";
-        coef.className = "coef";
-        coef.dataset.row = i;
-        coef.dataset.col = j;
-        coef.placeholder = getCoeffPlaceholder(size, i, j);
-        coef.style.cssText = "width:55px; padding:5px; border:1px solid #ccc; border-radius:4px; text-align: center;";
-        coefGroup.appendChild(coef);
-        
+        const input = document.createElement("input");
+        input.type = "number";
+        input.className = "coef";
+        input.dataset.row = i;
+        input.dataset.col = j;
+        input.placeholder = getCoeffPlaceholder(size, i, j);
+        input.step = "any";
+        row.appendChild(input);
+
         const label = document.createElement("span");
-        label.textContent = getVariableName(size, j);
-        label.style.cssText = "font-size:14px; font-weight:bold; color:#333;";
-        coefGroup.appendChild(label);
-        
-        equationContainer.appendChild(coefGroup);
-        
+        label.className = "var-label";
+        label.textContent = getVarName(size, j);
+        row.appendChild(label);
+
         if (j < size - 1) {
-          const plus = document.createElement("span");
-          plus.textContent = "+";
-          plus.style.cssText = "font-weight: bold; color: #666;";
-          equationContainer.appendChild(plus);
+          const op = document.createElement("span");
+          op.className = "op";
+          op.textContent = "+";
+          row.appendChild(op);
         }
       }
-      
-      // فقط برای n==1 جمله ثابت (b) را اضافه کن
-      if (size === 1) {
-        const plusForConst = document.createElement("span");
-        plusForConst.textContent = "+";
-        plusForConst.style.cssText = "font-weight: bold; color: #666;";
-        equationContainer.appendChild(plusForConst);
-        
-        const constant = document.createElement("input");
-        constant.type = "number";
-        constant.className = "const";
-        constant.dataset.row = i;
-        constant.placeholder = "b";
-        constant.style.cssText = "width:55px; padding:5px; border:1px solid #ccc; border-radius:4px; text-align: center;";
-        equationContainer.appendChild(constant);
-      }
-      
-      // علامت مساوی
-      const eqSpan = document.createElement("span");
-      eqSpan.textContent = "=";
-      eqSpan.style.cssText = "margin:0 5px; font-weight: bold; font-size:18px; color: #333;";
-      equationContainer.appendChild(eqSpan);
-      
-      // سمت راست معادله
-      const resultConstant = document.createElement("input");
-      resultConstant.type = "number";
-      resultConstant.className = "res-const";
-      resultConstant.dataset.row = i;
-      resultConstant.placeholder = getRHSPlaceholder(size, i);
-      resultConstant.style.cssText = "width:55px; padding:5px; border:1px solid #ccc; border-radius:4px; text-align: center;";
-      equationContainer.appendChild(resultConstant);
-      
-      solverDiv.appendChild(equationContainer);
+
+      const eq = document.createElement("span");
+      eq.className = "eq-sign";
+      eq.textContent = "=";
+      row.appendChild(eq);
+
+      const rhsInput = document.createElement("input");
+      rhsInput.type = "number";
+      rhsInput.className = "rhs";
+      rhsInput.dataset.row = i;
+      rhsInput.placeholder = getRHSPlaceholder(size, i);
+      rhsInput.step = "any";
+      row.appendChild(rhsInput);
+
+      container.appendChild(row);
     }
   }
-  
-  createInputs(n);
-  
-  select.addEventListener("change", function() {
-    n = parseInt(this.value) || 1;
-    createInputs(n);
+
+  buildInputs(n);
+
+  select.addEventListener("change", function () {
+    n = parseInt(this.value);
+    buildInputs(n);
+    resultBox.style.display = "none";
+    stepsBox.style.display = "none";
   });
 
-  function solveSystem(A, b) {
-    const n = A.length;
+  // ---- جمع‌آوری ماتریس ----
+  function getMatrix() {
+    const A = Array.from({ length: n }, () => Array(n).fill(0));
+    const b = Array(n).fill(0);
+
+    document.querySelectorAll(".coef").forEach(inp => {
+      const r = parseInt(inp.dataset.row);
+      const c = parseInt(inp.dataset.col);
+      A[r][c] = parseFloat(inp.value) || 0;
+    });
+
+    document.querySelectorAll(".rhs").forEach(inp => {
+      const r = parseInt(inp.dataset.row);
+      b[r] = parseFloat(inp.value) || 0;
+    });
+
+    // ---- برای n=1: ax + b = c  =>  ax = c - b ----
+    if (n === 1) {
+      const constInputs = document.querySelectorAll(".const");
+      if (constInputs.length > 0) {
+        const bVal = parseFloat(constInputs[0].value) || 0;
+        b[0] = b[0] - bVal;
+      }
+    }
+
+    return { A, b };
+  }
+
+  // ---- حل با گاوس-جردن و ذخیره مراحل ----
+  function solveWithSteps(A, b) {
     const M = A.map(row => row.slice());
     const rhs = [...b];
-    const EPS = 1e-12;
+    const size = M.length;
+    const steps = [];
+    const EPS = 1e-10;
+
+    function matrixToString(mat, vec) {
+      let s = "";
+      for (let i = 0; i < mat.length; i++) {
+        s += "[ " + mat[i].map(v => v.toFixed(3)).join("  ") + " | " + vec[i].toFixed(3) + " ]\n";
+      }
+      return s;
+    }
+
+    steps.push("📌 ماتریس اولیه:\n" + matrixToString(M, rhs));
+
     let rank = 0;
-    
-    for (let col = 0; col < n; col++) {
-      let pivotRow = -1;
-      let maxAbs = 0;
-      for (let r = rank; r < n; r++) {
-        const val = Math.abs(M[r][col]);
-        if (val > maxAbs) { maxAbs = val; pivotRow = r; }
+    for (let col = 0; col < size; col++) {
+      let pivot = -1;
+      let maxVal = 0;
+      for (let r = rank; r < size; r++) {
+        if (Math.abs(M[r][col]) > maxVal) {
+          maxVal = Math.abs(M[r][col]);
+          pivot = r;
+        }
       }
-      if (pivotRow === -1 || maxAbs < EPS) continue;
-      
-      if (pivotRow !== rank) {
-        [M[rank], M[pivotRow]] = [M[pivotRow], M[rank]];
-        [rhs[rank], rhs[pivotRow]] = [rhs[pivotRow], rhs[rank]];
+      if (pivot === -1 || maxVal < EPS) continue;
+
+      if (pivot !== rank) {
+        [M[rank], M[pivot]] = [M[pivot], M[rank]];
+        [rhs[rank], rhs[pivot]] = [rhs[pivot], rhs[rank]];
+        steps.push(`↕️ جابجایی سطر ${rank+1} و ${pivot+1}:\n` + matrixToString(M, rhs));
       }
-      
-      const piv = M[rank][col];
-      for (let c = col; c < n; c++) M[rank][c] /= piv;
-      rhs[rank] /= piv;
-      
-      for (let r = 0; r < n; r++) {
+
+      const pivVal = M[rank][col];
+      for (let c = col; c < size; c++) M[rank][c] /= pivVal;
+      rhs[rank] /= pivVal;
+      steps.push(`➗ نرمال‌سازی سطر ${rank+1} (تقسیم بر ${pivVal.toFixed(3)}):\n` + matrixToString(M, rhs));
+
+      for (let r = 0; r < size; r++) {
         if (r === rank) continue;
         const factor = M[r][col];
         if (Math.abs(factor) < EPS) continue;
-        for (let c = col; c < n; c++) M[r][c] -= factor * M[rank][c];
+        for (let c = col; c < size; c++) {
+          M[r][c] -= factor * M[rank][c];
+        }
         rhs[r] -= factor * rhs[rank];
+        steps.push(`✖️ حذف از سطر ${r+1} (ضریب ${factor.toFixed(3)}):\n` + matrixToString(M, rhs));
       }
+
       rank++;
     }
-    
-    for (let r = 0; r < n; r++) {
-      const allZero = M[r].every(v => Math.abs(v) < EPS);
-      if (allZero && Math.abs(rhs[r]) > EPS) return { type: "inconsistent" };
-    }
-    
-    if (rank === n) return { type: "unique", solution: rhs };
-    return { type: "infinite" };
-  }
-  
-  solveBtn.addEventListener("click", function(e) {
-    e.preventDefault();
-    const oldResult = document.querySelector(".result-box");
-    if (oldResult) oldResult.remove();
 
-    if (!areAllInputsFilled()) {
-      const errorBox = document.createElement("div");
-      errorBox.className = "result-box";
-      errorBox.style.color = "red";
-      errorBox.textContent = "⚠️ لطفا تمام کادرها را پر کنید.";
-      solverDiv.appendChild(errorBox);
+    for (let r = 0; r < size; r++) {
+      const allZero = M[r].every(v => Math.abs(v) < EPS);
+      if (allZero && Math.abs(rhs[r]) > EPS) {
+        return { type: "inconsistent", steps };
+      }
+    }
+
+    if (rank === size) {
+      return { type: "unique", solution: rhs, steps };
+    } else {
+      return { type: "infinite", steps };
+    }
+  }
+
+  // ---- دکمه حل ----
+  solveBtn.addEventListener("click", function () {
+    const { A, b } = getMatrix();
+
+    // چک کردن پر بودن همه فیلدها
+    let allFilled = true;
+    document.querySelectorAll(".coef, .rhs, .const").forEach(inp => {
+      if (inp.value.trim() === "") allFilled = false;
+    });
+    if (!allFilled) {
+      resultBox.style.display = "block";
+      resultBox.style.background = "#ffeaa7";
+      resultBox.style.borderColor = "#fdcb6e";
+      resultBox.innerHTML = "⚠️ لطفاً همه کادرها را پر کنید.";
+      stepsBox.style.display = "none";
       return;
     }
 
-    const A = Array.from({ length: n }, () => Array(n).fill(0));
-    const rhs = Array(n).fill(0);
-    
-    document.querySelectorAll(".coef").forEach(input => {
-      A[parseInt(input.dataset.row)][parseInt(input.dataset.col)] = parseFloat(input.value) || 0;
-    });
+    const result = solveWithSteps(A, b);
 
-    document.querySelectorAll(".res-const").forEach(input => {
-      rhs[parseInt(input.dataset.row)] = parseFloat(input.value) || 0;
-    });
-
-    // اگر n==1 باشد: ax + b = c  =>  ax = c - b
-    if (n === 1) {
-      const constantInputs = document.querySelectorAll(".const");
-      if (constantInputs.length) {
-        const b = parseFloat(constantInputs[0].value) || 0;
-        rhs[0] = rhs[0] - b;
-      }
-    }
-    
-    const result = solveSystem(A, rhs);
-    const resultBox = document.createElement("div");
-    resultBox.className = "result-box";
-    resultBox.style.cssText = "margin-top:20px; padding:15px; border-radius:8px; background:#f0f7ff; font-weight:bold; text-align:center;";
+    resultBox.style.display = "block";
+    resultBox.style.background = "#e8f4fd";
+    resultBox.style.borderColor = "#0984e3";
 
     let displayText = "";
     if (result.type === "unique") {
-      const vars = result.solution.map((val, idx) => `${getVariableName(n, idx)} = ${val.toFixed(4)}`);
+      const vars = result.solution.map((val, idx) =>
+        `${getVarName(n, idx)} = ${val.toFixed(4)}`
+      );
       displayText = "✅ جواب یکتا: " + vars.join(" | ");
+      resultBox.innerHTML = displayText;
     } else if (result.type === "infinite") {
-      displayText = "♾ دستگاه بی‌نهایت جواب دارد";
+      displayText = "♾️ دستگاه بی‌نهایت جواب دارد";
+      resultBox.innerHTML = displayText;
     } else {
-      displayText = "❌ دستگاه ناسازگار است";
+      displayText = "❌ دستگاه ناسازگار (بدون جواب)";
+      resultBox.innerHTML = displayText;
     }
-    
-    resultBox.innerHTML = displayText;
-    solverDiv.appendChild(resultBox);
-    
+
+    // نمایش مراحل حل
+    if (result.steps && result.steps.length > 0) {
+      stepsBox.style.display = "block";
+      stepsBox.innerHTML = "🧾 <strong>مراحل حل (گاوس-جردن):</strong><br><br>" +
+        result.steps.map((s, i) => `<div style="margin-bottom:12px;background:#fff;padding:10px;border-radius:10px;border-right:4px solid #0984e3;">${s.replace(/\n/g, '<br>')}</div>`).join("");
+    } else {
+      stepsBox.style.display = "none";
+    }
+
+    // ذخیره در localStorage
+    const stored = localStorage.getItem(STORAGE_KEY);
+    let history = stored ? JSON.parse(stored) : [];
     const entry = {
       title: `${n} معادله و ${n} مجهول`,
-      text: displayText.replace(/<sub>|<\/sub>/g, ''),
-      like: liked,
-      date: new Date().toISOString(),
-      s: false
+      text: displayText.replace(/<[^>]*>/g, ''),
+      like: false,
+      date: new Date().toISOString()
     };
     history.push(entry);
-    localStorage.setItem(localStorageKey, JSON.stringify(history));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(history));
   });
 });
